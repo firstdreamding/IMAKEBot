@@ -25,5 +25,5 @@ token_key.txt
 hs_err_pid*
 .idea/workspace.xml
 .idea/gradle.xml
-.idea/gradle.xml
-.idea/workspace.xml
+
+.idea
