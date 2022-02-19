@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6a48297-66cd-49fa-ba57-5b41c05c3961" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/CollegeData/IlliniEsports.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/CollegeData/IlliniEsports.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CollegeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CollegeData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CollegeNames.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CollegeNames.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -81,13 +76,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="java" value="448" />
-          <entry key="yml" value="170" />
+          <entry key="yml" value="257" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JAVA" value="448" />
-          <entry key="YAML" value="170" />
+          <entry key="YAML" value="257" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -158,8 +153,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+            <state relative-caret-position="153">
+              <caret line="9" column="40" lean-forward="true" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -167,8 +162,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            <state relative-caret-position="170">
+              <caret line="10" column="38" lean-forward="true" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -176,8 +171,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="16" />
+            <state relative-caret-position="34">
+              <caret line="2" column="765" selection-start-line="2" selection-start-column="765" selection-end-line="2" selection-end-column="765" />
             </state>
           </provider>
         </entry>
@@ -602,18 +597,18 @@
         <option value="$PROJECT_DIR$/src/main/java/TestCreation.java" />
         <option value="$PROJECT_DIR$/src/main/java/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/CollegeData.java" />
+        <option value="$PROJECT_DIR$/src/main/java/CollegeNames.java" />
         <option value="$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml" />
         <option value="$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml" />
-        <option value="$PROJECT_DIR$/src/main/java/CollegeNames.java" />
         <option value="$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="850" />
-    <option name="y" value="65" />
-    <option name="width" value="1023" />
-    <option name="height" value="1000" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="976" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -669,7 +664,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1645262466267" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1645263116900" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -737,7 +732,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13326226" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27292112" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -746,7 +741,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.329718" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.329718" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -873,24 +868,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="34">
+          <caret line="2" column="765" selection-start-line="2" selection-start-column="765" selection-end-line="2" selection-end-column="765" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/IlliniEsports.yml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/EsportsAtIowa.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="16" />
+        <state relative-caret-position="170">
+          <caret line="10" column="38" lean-forward="true" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/CollegeData/IUEsports.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        <state relative-caret-position="153">
+          <caret line="9" column="40" lean-forward="true" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
         </state>
       </provider>
     </entry>
