@@ -9,6 +9,7 @@ public class CollegeData {
     private String twitch;
     private String twitter;
     private String discord;
+    private long TextChannelID;
 
     public CollegeData() {
 
@@ -23,6 +24,7 @@ public class CollegeData {
         twitter = yamlFile.getString("Twitter");
         discord = yamlFile.getString("Discord");
         icon = yamlFile.getString("Icon");
+        TextChannelID = yamlFile.getLong("TextChannelID");
         System.out.println(name);
     }
 
@@ -88,5 +90,13 @@ public class CollegeData {
 
     public void setTwitch(String twitch) {
         this.twitch = twitch;
+    }
+
+    public long getTextChannelID() {
+        return TextChannelID;
+    }
+
+    public void setTextChannelID(long textChannelID) {
+        TextChannelID = textChannelID;
     }
 }
