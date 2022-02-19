@@ -56,6 +56,7 @@ public class Main {
                         .setTitle(currentData.getUniversity())
                         .setDescription(currentData.getDescription())
                         .setThumbnail(currentData.getIcon())
+                        .addField("Twitch", currentData.getTwitch())
                         .addField("Twitter", currentData.getTwitter())
                         .addField("Discord", currentData.getDiscord())
                         .setColor(Color.BLUE);
