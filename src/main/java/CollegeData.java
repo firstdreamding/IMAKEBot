@@ -6,6 +6,7 @@ public class CollegeData {
     private String description;
     private String icon;
     private String website;
+    private String twitch;
     private String twitter;
     private String discord;
 
@@ -18,6 +19,7 @@ public class CollegeData {
         university = yamlFile.getString("University");
         description = yamlFile.getString("Description");
         website = yamlFile.getString("Website");
+        twitch = yamlFile.getString("Twitch");
         twitter = yamlFile.getString("Twitter");
         discord = yamlFile.getString("Discord");
         icon = yamlFile.getString("Icon");
@@ -78,5 +80,13 @@ public class CollegeData {
 
     public void setUniversity(String university) {
         this.university = university;
+    }
+
+    public String getTwitch() {
+        return twitch;
+    }
+
+    public void setTwitch(String twitch) {
+        this.twitch = twitch;
     }
 }
