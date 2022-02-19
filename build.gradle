@@ -16,4 +16,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'org.javacord:javacord:3.4.0'
     implementation 'me.carleslc.Simple-YAML:Simple-Yaml:1.7.3'
+    implementation 'org.json:json:20211205'
 }
