@@ -1,5 +1,7 @@
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,9 +28,16 @@ public class BattlefyScraper {
             content.append(inputLine);
         }
 
-        System.out.println(content);
-        JSONObject jsonObj = new JSONObject();
-        System.out.println(jsonObj);
+        //System.out.println(content.toString());
+        JSONParser object = new JSONParser();
+        try {
+            JSONParser parser = new JSONParser();
+            JSONArray jsonArray = (JSONArray) parser.parse(content.toString());
+            JSONArray playerArray = (JSONArray) ((JSONObject) jsonArray.get(0)).get("players");
+            System.out.println(((JSONObject) playerArray.get(0)).get("inGameName"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         int teamName = content.indexOf("name");
         //System.out.println(content.charAt(teamName) + content.charAt(teamName + 1));
