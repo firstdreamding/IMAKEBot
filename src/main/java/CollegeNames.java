@@ -38,7 +38,7 @@ public class CollegeNames {
 
                 collegeData.add(new CollegeData(yamlFile));
 
-                System.out.println(pathFiles);
+                System.out.println(i);
                 List<String> stringIDs = yamlFile.getStringList("IDs");
                 for (String j : stringIDs) {
                     nameLookup.put(j.toLowerCase(), i);

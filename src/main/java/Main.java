@@ -5,9 +5,12 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -47,9 +50,14 @@ public class Main {
             if (collegeNames.nameLookup.containsKey(output[1].trim())) {
                 int index = collegeNames.nameLookup.get(output[1].trim());
                 CollegeData currentData = collegeNames.collegeData.get(index);
+                System.out.println(currentData.getUniversity());
                 EmbedBuilder embed = new EmbedBuilder()
-                        .setTitle(currentData.getName())
+                        .setAuthor(currentData.getName(), currentData.getWebsite(), currentData.getIcon())
+                        .setTitle(currentData.getUniversity())
                         .setDescription(currentData.getDescription())
+                        .setThumbnail(currentData.getIcon())
+                        .addField("Twitter", currentData.getTwitter())
+                        .addField("Discord", currentData.getDiscord())
                         .setColor(Color.BLUE);
                 event.getChannel().sendMessage(embed);
             } else {
