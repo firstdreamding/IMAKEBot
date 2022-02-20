@@ -20,8 +20,9 @@ public class BattlefyScraper {
 
     public BattlefyScraper(String battlefyUrl) throws ParseException, IOException {
         String[] splitBattlefyUrl = battlefyUrl.split("/");
-        String tournamentId = splitBattlefyUrl[5];
-        URL url = new URL("https://dtmwra1jsgyb0.cloudfront.net/tournaments/" + tournamentId + "/teams?");
+        String tournamentTeamsId = splitBattlefyUrl[5];
+        String tournamentStatsId = splitBattlefyUrl[7];
+        URL url = new URL("https://dtmwra1jsgyb0.cloudfront.net/tournaments/" + tournamentTeamsId + "/teams?");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
 
@@ -37,10 +38,10 @@ public class BattlefyScraper {
 
         JSONParser parser = new JSONParser();
         tournamentArray = (JSONArray) parser.parse(content.toString());
-    }
 
-    public BattlefyScraper() throws IOException, ParseException {
-        URL statsUrl = new URL("https://dtmwra1jsgyb0.cloudfront.net/stages/61d8c2ccb3ccd7231aa77fa0/stats");
+        //stats section
+
+        URL statsUrl = new URL("https://dtmwra1jsgyb0.cloudfront.net/stages/" + tournamentStatsId + "/stats");
         HttpURLConnection con2 = (HttpURLConnection) statsUrl.openConnection();
         con2.setRequestMethod("GET");
 
@@ -62,7 +63,7 @@ public class BattlefyScraper {
         //BattlefyScraper battlefyScraper = new
             //    BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
         //battlefyScraper.getTeams();
-        BattlefyScraper battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-east-conference/61720cd843d5751156d83bd2/info?infoTab=details");
+        BattlefyScraper battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-wolverine-hoosier-athletics-conference/617256eb22fbd3116b3485a6/stage/61d93914464dd03efe997d2f/stats");
 
         //System.out.println(tournamentStatsArray);
         //getKdas();

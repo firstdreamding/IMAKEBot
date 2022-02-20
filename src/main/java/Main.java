@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
@@ -26,7 +27,6 @@ public class Main {
     private Twitch twitch;
 
     static BattlefyScraper battlefyScraper;
-    static BattlefyScraper battlefyScrapperStats;
 
     private HashMap<String, PageHandler> instances_teams;
     private HashMap<String, Integer> regional_;
@@ -36,8 +36,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ParseException, InvalidConfigurationException {
         // Insert your bot's token here
-        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
-        battlefyScrapperStats = new BattlefyScraper();
+        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-wolverine-hoosier-athletics-conference/617256eb22fbd3116b3485a6/stage/61d93914464dd03efe997d2f/stats");
 
         String token = new String(Files.readAllBytes( Paths.get("src/main/resources/token_key.txt")));
         Main main = new Main();
@@ -83,22 +82,36 @@ public class Main {
             EmbedBuilder embed = new EmbedBuilder()
                     .setAuthor("JC Help", "", "https://www.iconsdb.com/icons/preview/red/question-mark-xxl.png")
                     .setTitle("JC Help")
-                    .setDescription("**OverallInfo**\n" +
-                            "jc search <University Name or Team Name>\n" +
+                    .setDescription("***Overall Info***  (╯°□°）╯︵ ┻━┻\n" +
+                            "**jc search <University Name or Team Name>**\n" +
                             "    - Gets information on search query esports organization.\n" +
-                            "\n" +
-                            "jc news <University Name or Team Name>\n" +
+                            "**jc news <University Name or Team Name>**\n" +
                             "    - Gets info if there on Universities Announcementt channel. \n" +
-                            "\n" +
-                            "**Twitter**\n" +
-                            "jc trecent <University Name or Team Name>\n" +
+                            "\n***Twitter***  (☞ﾟヮﾟ)☞\n" +
+                            "**jc trecent <University Name or Team Name>**\n" +
                             "    - Get the most recent tweet from query organization (last week)  \n" +
-                            "\n" +
-                            "jc twitter <University Name or Team Name>\n" +
+                            "**jc twitter <University Name or Team Name>**\n" +
                             "    - Get the Twitter account of the university and the JustChilln Score (scored via last week's likes, retweets, and replies)\n" +
-                            "\n" +
-                            "jc tstats <University Name or Team Name>\n" +
-                            "    - Get the Twitter rankings of all the database Universities Twitter account (last week)");
+                            "**jc tstats <University Name or Team Name>**\n" +
+                            "    - Get the Twitter rankings of all the database Universities Twitter account (last week)\n" +
+                            "\n***Twitch***  ༼ つ ◕_◕ ༽つ\n" +
+                            "**jc twitch random**\n" +
+                            "    - Gets a random collegiate stream that is live.\n" +
+                            "**jc twitch <University/Team Name>**\n" +
+                            "    - Gets a list of the top streams from a university/team that are live.\n" +
+                            "**jc twitch <Game/Category Name>**\n" +
+                            "    - Gets a list of the top streams from a game/category that are live.\n" +
+                            "\n***Battlefy***  ╰(*°▽°*)╯ \n" +
+                            "**jc team**\n" +
+                            "    - Returns a list of all teams in the channel's region.\n" +
+                            "**jc op <Team Name (jc team for list of teams)>**\n" +
+                            "    - Returns an opgg link of the inputted team.\n" +
+                            "**jc stats**\n" +
+                            "    - Returns a list of all KDAs sorted in descending order.\n" +
+                            "**jc region <Region Name>**\n" +
+                            "    - Switches channel region to inputted region.\n" +
+                            "**jc regions**\n" +
+                            "    - Gets a list of all collegiate conference regions.");
 
             event.getChannel().sendMessage(embed);
         }else if (messageLower.startsWith("jc search")) {
@@ -243,7 +256,7 @@ public class Main {
             String teamName = messageLower.substring(6).trim();
             if (!regional_.containsKey(event.getChannel().toString())) {
                 regional_.put(event.getChannel().toString(), 0);
-                event.getChannel().sendMessage("Setting default region 0");
+                event.getChannel().sendMessage("Setting default region " + tournamentId.get(0));
             }
 
             battlefyScraper = new BattlefyScraper(tournamentURL.get(regional_.get(event.getChannel().toString())));
@@ -252,7 +265,14 @@ public class Main {
             EmbedBuilder embed = new EmbedBuilder().setDescription(teamOpgg);
             event.getChannel().sendMessage(embed);
         } else if (messageLower.startsWith("jc stats")) {
-            ArrayList<String> kdaArray = battlefyScrapperStats.getKdas();
+
+            if (!regional_.containsKey(event.getChannel().toString())) {
+                regional_.put(event.getChannel().toString(), 0);
+                event.getChannel().sendMessage("Setting default region " + tournamentId.get(0));
+            }
+
+            battlefyScraper = new BattlefyScraper(tournamentURL.get(regional_.get(event.getChannel().toString())));
+            ArrayList<String> kdaArray = battlefyScraper.getKdas();
             new PageHandler(event.getChannel(), kdaArray, "Top KDAs", null, null, null, "https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
         }
     }
