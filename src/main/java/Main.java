@@ -19,6 +19,7 @@ public class Main {
     private CollegeNames collegeNames;
     private DiscordApi api;
     private Twitch twitch;
+
     private static BattlefyScraper battlefyScraper;
 
     public static void main(String[] args) throws IOException, ParseException {
