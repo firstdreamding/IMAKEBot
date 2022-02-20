@@ -72,20 +72,29 @@ public class BattlefyScraper {
         for (Object o : tournamentStatsArray) {
             statsArray.add(((JSONObject) o).get("stats"));
         }
-        System.out.println(statsArray.get(0));
+        //System.out.println(statsArray.get(0));
 
         ArrayList<Object> teamssArray = new ArrayList<>();
         for (Object o : statsArray) {
-            teamssArray.add(((JSONObject) o).get("teams"));
+            Object contents = ((JSONObject) o).get("teams");
+            if (contents != null) {
+                teamssArray.add(((JSONObject) o).get("teams"));
+            }
         }
-        System.out.println(teamssArray.get(0));
+        //System.out.println(teamssArray.get(0));
 
         ArrayList<JSONArray> playersArray = new ArrayList<>();
+
+        //System.out.println(teamssArray.get(teamssArray.size()-1));
+
         for (Object o : teamssArray) {
             playersArray.add((JSONArray) (((JSONObject) (((JSONArray) o).get(0))).get("players")));
             playersArray.add((JSONArray) (((JSONObject) (((JSONArray) o).get(1))).get("players")));
         }
-        System.out.println(playersArray);
+        for (JSONArray o : playersArray) {
+            System.out.println(o);
+        }
+
     }
 
     public ArrayList<String> getTeams() {
