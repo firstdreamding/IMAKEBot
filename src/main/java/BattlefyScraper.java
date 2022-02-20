@@ -10,10 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class BattlefyScraper {
@@ -71,7 +68,7 @@ public class BattlefyScraper {
         //getKdas();
     }
 
-    public Stream<Map.Entry<String, Double>> getKdas() {
+    public ArrayList<String> getKdas() {
         ArrayList<Object> statsArray = new ArrayList<>();
         for (Object o : tournamentStatsArray) {
             statsArray.add(((JSONObject) o).get("stats"));
@@ -106,18 +103,35 @@ public class BattlefyScraper {
         }
         //System.out.println(playerStatsArray);
 
-        HashMap<String, Double> playerKdas = new HashMap<>();
+        ArrayList<KDA> playerKdas = new ArrayList<>();
         for (Object o : playerStatsArray) {
             String summonerName = ((JSONObject) o).get("summonerName").toString().toLowerCase().replace(" ", "");
             Object a = ((JSONObject) o).get("killDeathAssistsRatio");
             if (a != null) {
+                boolean found = false;
                 double kda = Double.parseDouble(a.toString());
-                playerKdas.put(summonerName, kda);
+                for (int i = 0; i < playerKdas.size(); i++) {
+                    if (playerKdas.get(i).name.equalsIgnoreCase(summonerName)) {
+                        playerKdas.get(i).counter++;
+                        playerKdas.get(i).KDA = playerKdas.get(i).KDA / playerKdas.get(i).counter;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    playerKdas.add(new KDA(summonerName, kda));
+                }
             }
         }
 
-        Stream<Map.Entry<String, Double>> sorted = playerKdas.entrySet().stream().sorted(Map.Entry.comparingByValue());
-        return sorted;
+        Collections.sort(playerKdas, new KDAComparator());
+
+        ArrayList<String> names = new ArrayList<>();
+        for (int i = 0; i < playerKdas.size(); i++) {
+            names.add(playerKdas.get(i).name + ": " + playerKdas.get(i).KDA);
+        }
+
+        return names;
     }
 
     public ArrayList<String> getTeams() {

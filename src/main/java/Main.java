@@ -4,13 +4,17 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -25,8 +29,12 @@ public class Main {
     static BattlefyScraper battlefyScrapperStats;
 
     private HashMap<String, PageHandler> instances_teams;
+    private HashMap<String, Integer> regional_;
 
-    public static void main(String[] args) throws IOException, ParseException {
+    private ArrayList<String> tournamentURL;
+    private ArrayList<String> tournamentId;
+
+    public static void main(String[] args) throws IOException, ParseException, InvalidConfigurationException {
         // Insert your bot's token here
         battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
         battlefyScrapperStats = new BattlefyScraper();
@@ -36,8 +44,16 @@ public class Main {
         main.instances_teams = new HashMap<>();
         main.api = new DiscordApiBuilder().setToken(token).login().join();
         main.twitterScraper = new TwitterScraper();
+        main.regional_ = new HashMap<>();
 
         main.collegeNames = new CollegeNames();
+
+        //src/main/resources/CollegeData
+        YamlFile yamlFile = new YamlFile("src/main/resources/BattlefyTournamentLinks.yml");
+        yamlFile.load();
+
+        main.tournamentURL = (ArrayList<String>) yamlFile.getStringList("TournamentLinks");
+        main.tournamentId = (ArrayList<String>) yamlFile.getStringList("TournamentNames");
 
         //main.twitch = new Twitch(main.collegeNames);
 
@@ -186,7 +202,33 @@ public class Main {
                         .setDescription("Last week points: " + twitterScraper.getLikes(currentData.getTwitter().split("https://twitter.com/", 2)[1], currentData).score);
                 event.getChannel().sendMessage(embed);
             }
+        } else if (messageLower.startsWith("jc regions")) {
+            new PageHandler(event.getChannel(), tournamentId, "All Regions", null, null, null, "https://preview.redd.it/itq8rpld8va51.png?width=256&format=png&auto=webp&s=9701ba6228c29bf2d7e3dfffd45b9a3562507289");
+        } else if (messageLower.startsWith("jc region")) {
+            String teamName = messageLower.substring(9).trim();
+            int index = -1;
+            for (int i = 0; i < tournamentId.size(); i++) {
+                if (tournamentId.get(i).equalsIgnoreCase(teamName)) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == -1) {
+                event.getChannel().sendMessage("Cannot find " + teamName);
+                return;
+            } else {
+                event.getChannel().sendMessage("Setting region to " + teamName);
+                regional_.put(event.getChannel().toString(), index);
+            }
         } else if (messageLower.startsWith("jc teams")) {
+
+            if (!regional_.containsKey(event.getChannel().toString())) {
+                regional_.put(event.getChannel().toString(), 0);
+                event.getChannel().sendMessage("Setting default region " + tournamentId.get(0));
+            }
+
+            battlefyScraper = new BattlefyScraper(tournamentURL.get(regional_.get(event.getChannel().toString())));
+
             ArrayList<String> teamData = battlefyScraper.getTeams();
 
             teamData.sort(String::compareToIgnoreCase);
@@ -199,20 +241,20 @@ public class Main {
 
         } else if (messageLower.startsWith("jc op")) {
             String teamName = messageLower.substring(6).trim();
-            //System.out.println(teamName);
+            if (!regional_.containsKey(event.getChannel().toString())) {
+                regional_.put(event.getChannel().toString(), 0);
+                event.getChannel().sendMessage("Setting default region 0");
+            }
+
+            battlefyScraper = new BattlefyScraper(tournamentURL.get(regional_.get(event.getChannel().toString())));
+
             String teamOpgg = battlefyScraper.getPlayersOpgg(teamName);
             EmbedBuilder embed = new EmbedBuilder().setDescription(teamOpgg);
             event.getChannel().sendMessage(embed);
         } else if (messageLower.startsWith("jc stats")) {
-        Object[] kdaArray = battlefyScrapperStats.getKdas().toArray();
-        StringBuilder description = new StringBuilder();
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Top KDAs").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
-        for (int i = 0; i < 50; i++) {
-            description.append("#").append(i + 1).append(" - ").append(kdaArray[kdaArray.length - 1 - i]).append("\n");
+            ArrayList<String> kdaArray = battlefyScrapperStats.getKdas();
+            new PageHandler(event.getChannel(), kdaArray, "Top KDAs", null, null, null, "https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
         }
-        embed.setDescription(description.toString());
-        event.getChannel().sendMessage(embed);
-    }
     }
 
 }

@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 public class TwitterScraper {
 
+    //Channel ID, Instance
     private HashMap<String, PageHandler> instances;
     private String key_;
 
