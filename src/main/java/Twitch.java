@@ -1,9 +1,9 @@
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
-import com.github.twitch4j.helix.domain.GameTopList;
 import com.github.twitch4j.helix.domain.Stream;
 import com.github.twitch4j.helix.domain.StreamList;
-import org.json.simple.JSONArray;
+import org.apache.commons.lang.WordUtils;
+import org.javacord.api.entity.channel.TextChannel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ public class Twitch {
     private String clientSecret = new String(Files.readAllBytes( Paths.get("src/main/resources/twitch_client_secret.txt")));;
     private String clientToken;
     public ArrayList<String> streamerList;
+    private HashMap<String, PageHandler> instances;
 
     public TwitchClient twitchClient = TwitchClientBuilder.builder()
             .withEnableHelix(true)
@@ -32,6 +32,7 @@ public class Twitch {
     public Twitch(CollegeNames collegeNames) throws IOException {
         clientToken = getToken();
         streamerList = createStreamerList(collegeNames);
+        instances = new HashMap<>();
     }
 
     private String getToken() throws IOException {
@@ -63,20 +64,9 @@ public class Twitch {
 
     public ArrayList<String> createStreamerList(CollegeNames collegeNames) {
         ArrayList<String> streamerList = new ArrayList<>();
-        collegeNames.collegeData.forEach(college-> {
-            streamerList.addAll(college.getStreamers());
-        });
+        collegeNames.collegeData.forEach(college-> streamerList.addAll(college.getStreamers()));
 
         return streamerList;
-    }
-
-    public StreamList getActiveStreamersFromSchool(ArrayList<String> streamerList) {
-        StreamList resultList = twitchClient.getHelix().getStreams(clientToken, null, null, 5, null, null, null, streamerList).execute();
-        resultList.getStreams().forEach(stream -> {
-            System.out.println("ID: " + stream.getId() + " - Title: " + stream.getTitle());
-        });
-
-        return resultList;
     }
 
     public Stream getRandomStreamer() {
@@ -88,5 +78,39 @@ public class Twitch {
             Random rand = new Random();
             return resultList.getStreams().get(rand.nextInt(resultList.getStreams().size()));
         }
+    }
+
+    public void getActiveStreamers(TextChannel channel, ArrayList<String> streamerList, String title, String category, String icon) {
+        if (streamerList.size() == 0) {
+            channel.sendMessage("No streamers are online! Check back another time.");
+            return;
+        }
+
+        StreamList resultList = twitchClient.getHelix().getStreams(clientToken, null, null, streamerList.size(), null, null, null, streamerList).execute();
+        resultList.getStreams().sort(new TwitchComparator());
+        ArrayList<String> activeStreamerList = new ArrayList<>();
+        StringBuilder topStreamer = new StringBuilder("Top Streamer: ");
+        StringBuilder topStreamerUrl = new StringBuilder("https://www.twitch.tv/");
+        for (Stream stream : resultList.getStreams()) {
+            if (category.equals("") || category.equalsIgnoreCase(stream.getGameName())) {
+                activeStreamerList.add(stream.getUserName() + ": https://www.twitch.tv/" + stream.getUserLogin());
+                if (topStreamer.toString().equals("Top Streamer: ")) {
+                    topStreamer.append(stream.getUserName());
+                    topStreamerUrl.append(stream.getUserLogin());
+                }
+            }
+        }
+
+        if (activeStreamerList.size() == 0) {
+            channel.sendMessage("No streamers are online! Check back another time.");
+            return;
+        }
+
+        if (!category.equals("")) {
+            title = WordUtils.capitalizeFully(category + " " + title);
+        }
+
+        instances.remove(channel.getIdAsString());
+        instances.put(channel.getIdAsString(), new PageHandler(channel, activeStreamerList, title + " 🔴", topStreamer.toString(), topStreamerUrl.toString(), icon));
     }
 }

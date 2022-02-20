@@ -17,6 +17,7 @@ public class Main {
 
     private TwitterScraper twitterScraper;
     private CollegeNames collegeNames;
+    private CategoryNames categoryNames;
     private DiscordApi api;
     private Twitch twitch;
 
@@ -30,18 +31,15 @@ public class Main {
         Main main = new Main();
         main.api = new DiscordApiBuilder().setToken(token).login().join();
         main.twitterScraper = new TwitterScraper();
-
         main.collegeNames = new CollegeNames();
-
+        main.categoryNames = new CategoryNames();
         main.twitch = new Twitch(main.collegeNames);
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
         main.api.addMessageCreateListener(event -> {
             try {
                 main.handleCommand(event);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         });
@@ -87,9 +85,7 @@ public class Main {
                             .setTitle("Latest News")
                             .setDescription(content_scraped);
                     event.getChannel().sendMessage(embed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
@@ -101,35 +97,26 @@ public class Main {
                     event.getChannel().sendMessage("No streamers are online! Check back another time.");
                 } else {
                     EmbedBuilder embed = new EmbedBuilder()
-                        .setAuthor(stream.getUserName() + " 🔴", "https://www.twitch.tv/" + stream.getUserLogin(), "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png")
-                        .setTitle(stream.getTitle())
-                        .setDescription("Viewers: " + stream.getViewerCount().toString())
-                        .setImage(stream.getThumbnailUrl().replace("{height}", "900").replace("{width}", "1600"))
-                        .setUrl("https://www.twitch.tv/" + stream.getUserLogin());
+                            .setAuthor(stream.getUserName() + " 🔴", "https://www.twitch.tv/" + stream.getUserLogin(), "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png")
+                            .setTitle(stream.getTitle())
+                            .setDescription("Viewers: " + stream.getViewerCount().toString())
+                            .setImage(stream.getThumbnailUrl().replace("{height}", "900").replace("{width}", "1600"))
+                            .setUrl("https://www.twitch.tv/" + stream.getUserLogin());
 
                     event.getChannel().sendMessage(embed);
                 }
+            } else if (categoryNames.nameLookup.containsKey(output[1].trim())) {
+                int index = categoryNames.nameLookup.get(output[1].trim());
+                CategoryData currentData = categoryNames.categoryData.get(index);
+                ArrayList<String> streamerList = currentData.getStreamers();
+                twitch.getActiveStreamers(event.getChannel(), streamerList, "Top Streamers", currentData.getName(), currentData.getIcon());
             } else if (collegeNames.nameLookup.containsKey(output[1].trim())) {
                 int index = collegeNames.nameLookup.get(output[1].trim());
                 CollegeData currentData = collegeNames.collegeData.get(index);
                 ArrayList<String> streamerList = currentData.getStreamers();
-
-                StreamList active = twitch.getActiveStreamersFromSchool(streamerList);
-                if (active.getStreams().isEmpty()) {
-                    event.getChannel().sendMessage("No streamers are online! Check back another time.");
-                } else {
-                    active.getStreams().forEach(stream -> {
-//                        EmbedBuilder embed = new EmbedBuilder()
-//                            .setAuthor(stream.getUserName(), "https://www.twitch.tv/" + stream.getUserLogin(), "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png")
-//                            .setTitle(stream.getTitle())
-//                            .setDescription("Viewers: " + stream.getViewerCount().toString())
-//                            .setImage(stream.getThumbnailUrl().replace("{height}", "900").replace("{width}", "1600"))
-//                            .setUrl("https://www.twitch.tv/" + stream.getUserLogin());
-//
-//                        event.getChannel().sendMessage(embed);
-                        event.getChannel().sendMessage("https://www.twitch.tv/" + stream.getUserLogin());
-                    });
-                }
+                twitch.getActiveStreamers(event.getChannel(), streamerList, "Top Streamers", "", currentData.getIcon());
+            } else {
+                event.getChannel().sendMessage("University/Team/Category not found on Twitch, please respecify and try again!");
             }
         } else if (messageLower.startsWith("jc twitter")) {
             String[] output = messageLower.split("jc twitter", 2);
@@ -170,5 +157,4 @@ public class Main {
             event.getChannel().sendMessage(embed);
         }
     }
-
 }
