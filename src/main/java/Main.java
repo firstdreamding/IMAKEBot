@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
@@ -25,15 +27,16 @@ public class Main {
     static BattlefyScraper battlefyScrapperStats;
 
     private HashMap<String, PageHandler> instances_teams;
+    private HashMap<String, PageHandler> instances_stats;
 
     public static void main(String[] args) throws IOException, ParseException {
         // Insert your bot's token here
-        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
-        battlefyScrapperStats = new BattlefyScraper();
+        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-wolverine-hoosier-athletics-conference/617256eb22fbd3116b3485a6/stage/61d93914464dd03efe997d2f/stats");
 
         String token = new String(Files.readAllBytes( Paths.get("src/main/resources/token_key.txt")));
         Main main = new Main();
         main.instances_teams = new HashMap<>();
+        main.instances_stats = new HashMap<>();
         main.api = new DiscordApiBuilder().setToken(token).login().join();
         main.twitterScraper = new TwitterScraper();
 
@@ -204,15 +207,15 @@ public class Main {
             EmbedBuilder embed = new EmbedBuilder().setDescription(teamOpgg);
             event.getChannel().sendMessage(embed);
         } else if (messageLower.startsWith("jc stats")) {
-        Object[] kdaArray = battlefyScrapperStats.getKdas().toArray();
-        StringBuilder description = new StringBuilder();
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Top KDAs").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
-        for (int i = 0; i < 50; i++) {
-            description.append("#").append(i + 1).append(" - ").append(kdaArray[kdaArray.length - 1 - i]).append("\n");
+            Object[] kdaArray = battlefyScraper.getKdas().toArray();
+            StringBuilder description = new StringBuilder();
+            EmbedBuilder embed = new EmbedBuilder().setTitle("Top KDAs").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
+            for (int i = 0; i < kdaArray.length; i++) {
+                description.append("#").append(i + 1).append(" - ").append(kdaArray[kdaArray.length - 1 - i]).append("\n");
+            }
+            embed.setDescription(description.toString());
+            event.getChannel().sendMessage(embed);
         }
-        embed.setDescription(description.toString());
-        event.getChannel().sendMessage(embed);
-    }
     }
 
 }
