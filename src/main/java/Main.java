@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
 
+    private TwitterScraper twitterScraper;
     private CollegeNames collegeNames;
     private DiscordApi api;
     private static BattlefyScraper battlefyScraper;
