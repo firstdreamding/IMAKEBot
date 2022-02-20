@@ -39,7 +39,7 @@ public class PageHandler {
 
             int max_i = Math.min(index * ELEMENT_PAGE + ELEMENT_PAGE, content.size());
             for (int i = index * ELEMENT_PAGE; i < index * ELEMENT_PAGE + max_i; i++) {
-                contentString += i + ": " + content.get(i) + "\n";
+                contentString += (i + 1) + ": " + content.get(i) + "\n";
             }
             embed.setDescription(contentString);
             if (thumbnail != null) {

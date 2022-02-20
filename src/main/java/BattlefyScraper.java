@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -113,8 +115,9 @@ public class BattlefyScraper {
                 double kda = Double.parseDouble(a.toString());
                 for (int i = 0; i < playerKdas.size(); i++) {
                     if (playerKdas.get(i).name.equalsIgnoreCase(summonerName)) {
+                        playerKdas.get(i).KDA = (((playerKdas.get(i).KDA) * playerKdas.get(i).counter) + kda) / (playerKdas.get(i).counter + 1);
                         playerKdas.get(i).counter++;
-                        playerKdas.get(i).KDA = playerKdas.get(i).KDA / playerKdas.get(i).counter;
+                        System.out.println(playerKdas.get(i).KDA);
                         found = true;
                         break;
                     }
@@ -128,8 +131,9 @@ public class BattlefyScraper {
         Collections.sort(playerKdas, new KDAComparator());
 
         ArrayList<String> names = new ArrayList<>();
+        NumberFormat formatter = new DecimalFormat("#0.00");
         for (int i = 0; i < playerKdas.size(); i++) {
-            names.add(playerKdas.get(i).name + ": " + playerKdas.get(i).KDA);
+            names.add(playerKdas.get(i).name + ": **" + formatter.format(playerKdas.get(i).KDA) + "** out of **" + playerKdas.get(i).counter + "** games");
         }
 
         return names;

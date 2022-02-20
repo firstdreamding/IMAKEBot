@@ -44,6 +44,8 @@ public class Main {
 
         main.collegeNames = new CollegeNames();
 
+        main.categoryNames = new CategoryNames();
+
         //src/main/resources/CollegeData
         YamlFile yamlFile = new YamlFile("src/main/resources/BattlefyTournamentLinks.yml");
         yamlFile.load();
@@ -51,7 +53,7 @@ public class Main {
         main.tournamentURL = (ArrayList<String>) yamlFile.getStringList("TournamentLinks");
         main.tournamentId = (ArrayList<String>) yamlFile.getStringList("TournamentNames");
 
-        //main.twitch = new Twitch(main.collegeNames);
+        main.twitch = new Twitch(main.collegeNames);
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
         main.api.addMessageCreateListener(event -> {
