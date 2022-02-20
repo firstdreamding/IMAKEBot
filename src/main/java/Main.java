@@ -20,14 +20,17 @@ public class Main extends BattlefyScraper {
 
     private CollegeNames collegeNames;
     private DiscordApi api;
+    private TwitterScraper twitterScraper;
 
     public static void main(String[] args) throws IOException {
 //        // Insert your bot's token here
 //        BattlefyScraper battlefyScraper = new BattlefyScraper();
 //        battlefyScraper.getPlayers("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
+
         String token = new String(Files.readAllBytes( Paths.get("src/main/resources/token_key.txt")));
         Main main = new Main();
         main.api = new DiscordApiBuilder().setToken(token).login().join();
+        main.twitterScraper = new TwitterScraper();
 
         main.collegeNames = new CollegeNames();
 
@@ -50,19 +53,17 @@ public class Main extends BattlefyScraper {
 
         if (messageLower.startsWith("jc search")) {
             String[] output = messageLower.split("jc search", 2);
+
+            if (output[1].trim().length() == 0) {
+                event.getChannel().sendMessage("Syntax: jc search <University or program name searched for>");
+                return;
+            }
+
+            //Search to see if keywords is contained in lookup table
             if (collegeNames.nameLookup.containsKey(output[1].trim())) {
                 int index = collegeNames.nameLookup.get(output[1].trim());
                 CollegeData currentData = collegeNames.collegeData.get(index);
-                System.out.println(currentData.getUniversity());
-                EmbedBuilder embed = new EmbedBuilder()
-                        .setAuthor(currentData.getName(), currentData.getWebsite(), currentData.getIcon())
-                        .setTitle(currentData.getUniversity())
-                        .setDescription(currentData.getDescription())
-                        .setThumbnail(currentData.getIcon())
-                        .addField("Twitter", currentData.getTwitter())
-                        .addField("Discord", currentData.getDiscord())
-                        .setColor(Color.BLUE);
-                event.getChannel().sendMessage(embed);
+                currentData.sendSummaryMessage(event.getChannel());
             } else {
                 event.getChannel().sendMessage("Cannot find " + output[1].trim());
             }
@@ -71,6 +72,7 @@ public class Main extends BattlefyScraper {
             if (collegeNames.nameLookup.containsKey(output[1].trim())) {
                 int index = collegeNames.nameLookup.get(output[1].trim());
                 CollegeData currentData = collegeNames.collegeData.get(index);
+                //Tries to access channel to copy paste from
                 try {
                     String content_scraped = api.getChannelById(currentData.getTextChannelID()).get().asTextChannel().get().getMessages(1).get().getNewestMessage().get().getContent();
                     EmbedBuilder embed = new EmbedBuilder()
@@ -84,6 +86,21 @@ public class Main extends BattlefyScraper {
                     e.printStackTrace();
                 }
             }
+        } else if (messageLower.startsWith("jc twitter")) {
+            String[] output = messageLower.split("jc twitter", 2);
+            if (collegeNames.nameLookup.containsKey(output[1].trim())) {
+                int index = collegeNames.nameLookup.get(output[1].trim());
+                CollegeData currentData = collegeNames.collegeData.get(index);
+                System.out.println(index);
+                //Tries to access channel to copy paste from
+                try {
+                    twitterScraper.getRecentTweet(currentData.getTwitter().split("https://twitter.com/", 2)[1], event.getChannel(), currentData);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (messageLower.startsWith("jc tstats")) {
+            twitterScraper.getAllStats(event.getChannel(), collegeNames.collegeData);
         }
     }
 }

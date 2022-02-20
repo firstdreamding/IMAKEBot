@@ -1,4 +1,8 @@
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.simpleyaml.configuration.file.YamlFile;
+
+import java.awt.*;
 
 public class CollegeData {
     private String name;
@@ -26,6 +30,18 @@ public class CollegeData {
         icon = yamlFile.getString("Icon");
         TextChannelID = yamlFile.getLong("TextChannelID");
         System.out.println(name);
+    }
+
+    public void sendSummaryMessage(TextChannel channel) {
+        EmbedBuilder embed = new EmbedBuilder()
+                .setAuthor(name, website, icon)
+                .setTitle(university)
+                .setDescription(description)
+                .setThumbnail(icon)
+                .addField("Twitter", twitter)
+                .addField("Discord", discord)
+                .setColor(Color.BLUE);
+        channel.sendMessage(embed);
     }
 
     public String getName() {
