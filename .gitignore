@@ -30,9 +30,3 @@ hs_err_pid*
 .idea/gradle.xml
 
 .idea
-src/main/resources/twitter_token_key.txt
-src/main/resources/twitch_client_secret.txt
-src/main/resources/twitter_token_key.txt
-out/production/resources/twitch_client_secret.txt
-out/production/resources/twitter_token_key.txt
-out/production/resources/twitter_token_key.txt

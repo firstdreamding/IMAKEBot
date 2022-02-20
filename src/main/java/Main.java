@@ -101,7 +101,7 @@ public class Main {
                     event.getChannel().sendMessage("No streamers are online! Check back another time.");
                 } else {
                     EmbedBuilder embed = new EmbedBuilder()
-                        .setAuthor(stream.getUserName() + " 🔴 ", "https://www.twitch.tv/" + stream.getUserLogin(), "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png")
+                        .setAuthor(stream.getUserName(), "https://www.twitch.tv/" + stream.getUserLogin(), "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png")
                         .setTitle(stream.getTitle())
                         .setDescription("Viewers: " + stream.getViewerCount().toString())
                         .setImage(stream.getThumbnailUrl().replace("{height}", "900").replace("{width}", "1600"))
