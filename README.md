@@ -11,14 +11,14 @@ Add these custom API keys to their respective files in the resources folder.
 - Twitter Token: twitter_token_key.txt
 
 ## Bot Commands (JC Help)
-Overall Info (╯°□°）╯︵ ┻━┻
+### Overall Info (╯°□°）╯︵ ┻━┻
 jc search <University Name or Team Name>
 - Gets information on search query esports organization.
 
 jc news <University Name or Team Name>
 - Gets info if there on Universities Announcementt channel.
 
-Twitter (☞ﾟヮﾟ)☞
+### Twitter (☞ﾟヮﾟ)☞
 jc trecent <University Name or Team Name>
 - Get the most recent tweet from query organization (last week)
 
@@ -28,7 +28,7 @@ jc twitter <University Name or Team Name>
 jc tstats <University Name or Team Name>
 - Get the Twitter rankings of all the database Universities Twitter account (last week)
 
-Twitch ༼ つ ◕_◕ ༽つ
+### Twitch ༼ つ ◕_◕ ༽つ
 jc twitch random
 - Gets a random collegiate stream that is live.
 
@@ -38,7 +38,7 @@ jc twitch <University/Team Name>
 jc twitch <Game/Category Name>
 - Gets a list of the top streams from a game/category that are live.
 
-Battlefy ╰(°▽°)╯
+### Battlefy ╰(°▽°)╯
 jc team
 - Returns a list of all teams in the channel's region.
 
