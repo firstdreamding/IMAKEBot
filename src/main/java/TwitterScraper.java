@@ -101,7 +101,7 @@ public class TwitterScraper {
             instances.remove(channel.getIdAsString());
         }
 
-        instances.put(channel.getIdAsString(), new PageHandler(channel, stats_string, "Twitter Ranking: This Week", stats.get(0).data.getName(), stats.get(0).data.getTwitter(), stats.get(0).data.getIcon()));
+        instances.put(channel.getIdAsString(), new PageHandler(channel, stats_string, "Twitter Ranking: This Week", stats.get(0).data.getName(), stats.get(0).data.getTwitter(), stats.get(0).data.getIcon(), null));
     }
 
     public CollegeRank getLikes(String user, CollegeData currentData) throws IOException {

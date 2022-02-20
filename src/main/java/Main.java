@@ -1,16 +1,15 @@
 import com.github.twitch4j.helix.domain.Stream;
-import com.github.twitch4j.helix.domain.StreamList;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.json.simple.parser.ParseException;
 
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
@@ -21,14 +20,20 @@ public class Main {
     private DiscordApi api;
     private Twitch twitch;
 
-    private static BattlefyScraper battlefyScraper;
+    static BattlefyScraper battlefyScraper;
+    static BattlefyScraper battlefyScrapperStats;
+
+    private HashMap<String, PageHandler> instances_teams;
+    private HashMap<String, PageHandler> instances_stats;
 
     public static void main(String[] args) throws IOException, ParseException {
         // Insert your bot's token here
-        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
+        battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-wolverine-hoosier-athletics-conference/617256eb22fbd3116b3485a6/stage/61d93914464dd03efe997d2f/stats");
 
         String token = new String(Files.readAllBytes( Paths.get("src/main/resources/token_key.txt")));
         Main main = new Main();
+        main.instances_teams = new HashMap<>();
+        main.instances_stats = new HashMap<>();
         main.api = new DiscordApiBuilder().setToken(token).login().join();
         main.twitterScraper = new TwitterScraper();
         main.collegeNames = new CollegeNames();
@@ -55,8 +60,29 @@ public class Main {
         }
 
         String messageLower = event.getMessageContent().toLowerCase();
+        if (messageLower.startsWith("jc help")) {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setAuthor("JC Help", "", "https://www.iconsdb.com/icons/preview/red/question-mark-xxl.png")
+                    .setTitle("JC Help")
+                    .setDescription("**OverallInfo**\n" +
+                            "jc search <University Name or Team Name>\n" +
+                            "    - Gets information on search query esports organization.\n" +
+                            "\n" +
+                            "jc news <University Name or Team Name>\n" +
+                            "    - Gets info if there on Universities Announcementt channel. \n" +
+                            "\n" +
+                            "**Twitter**\n" +
+                            "jc trecent <University Name or Team Name>\n" +
+                            "    - Get the most recent tweet from query organization (last week)  \n" +
+                            "\n" +
+                            "jc twitter <University Name or Team Name>\n" +
+                            "    - Get the Twitter account of the university and the JustChilln Score (scored via last week's likes, retweets, and replies)\n" +
+                            "\n" +
+                            "jc tstats <University Name or Team Name>\n" +
+                            "    - Get the Twitter rankings of all the database Universities Twitter account (last week)");
 
-        if (messageLower.startsWith("jc search")) {
+            event.getChannel().sendMessage(embed);
+        }else if (messageLower.startsWith("jc search")) {
             String[] output = messageLower.split("jc search", 2);
 
             if (output[1].trim().length() == 0) {
@@ -118,12 +144,11 @@ public class Main {
             } else {
                 event.getChannel().sendMessage("University/Team/Category not found on Twitch, please respecify and try again!");
             }
-        } else if (messageLower.startsWith("jc twitter")) {
-            String[] output = messageLower.split("jc twitter", 2);
+        } else if (messageLower.startsWith("jc trecent")) {
+            String[] output = messageLower.split("jc trecent", 2);
             if (collegeNames.nameLookup.containsKey(output[1].trim())) {
                 int index = collegeNames.nameLookup.get(output[1].trim());
                 CollegeData currentData = collegeNames.collegeData.get(index);
-                System.out.println(index);
                 //Tries to access channel to copy paste from
                 try {
                     twitterScraper.getRecentTweet(currentData.getTwitter().split("https://twitter.com/", 2)[1], event.getChannel(), currentData);
@@ -133,27 +158,43 @@ public class Main {
             }
         } else if (messageLower.startsWith("jc tstats")) {
             twitterScraper.getAllStats(event.getChannel(), collegeNames.collegeData);
+        } else if (messageLower.startsWith("jc twitter")) {
+            String[] output = messageLower.split("jc twitter", 2);
+            if (collegeNames.nameLookup.containsKey(output[1].trim())) {
+                int index = collegeNames.nameLookup.get(output[1].trim());
+                CollegeData currentData = collegeNames.collegeData.get(index);
+
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setAuthor(currentData.getName(), currentData.getTwitter(), currentData.getIcon())
+                        .setTitle(currentData.getName() + " Twitter Stats")
+                        .setThumbnail(currentData.getIcon())
+                        .setDescription("Last week points: " + twitterScraper.getLikes(currentData.getTwitter().split("https://twitter.com/", 2)[1], currentData).score);
+                event.getChannel().sendMessage(embed);
+            }
         } else if (messageLower.startsWith("jc teams")) {
             ArrayList<String> teamData = battlefyScraper.getTeams();
+
             teamData.sort(String::compareToIgnoreCase);
-            EmbedBuilder embed = new EmbedBuilder().setTitle("Teams").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
 
-            ArrayList<Button> buttons = new ArrayList<>();
-            buttons.add(new Button("<"));
-            buttons.add(new Button(">"));
-
-            StringBuilder description = new StringBuilder();
-            for (int i = 0; i < teamData.size(); i++) {
-                description.append("#").append(i + 1).append(" - ").append(teamData.get(i)).append("\n");
-
+            if (instances_teams.containsKey(event.getChannel().getIdAsString())) {
+                instances_teams.remove(event.getChannel().getIdAsString());
             }
-            embed.setDescription(description.toString());
-            event.getChannel().sendMessage(embed);
+
+            instances_teams.put(event.getChannel().getIdAsString(), new PageHandler(event.getChannel(), teamData, "Battlefly Teams", "Sparsh", "https://www.linkedin.com/in/sparshdeep-singh-08a07b221", "https://media-exp1.licdn.com/dms/image/C5603AQH7TMwhExoPjA/profile-displayphoto-shrink_800_800/0/1631757790166?e=1651104000&v=beta&t=d-G8wpbVq4DexYtHJz_WSvWnIXk0Tpi2LYkARHRIEoI", null));
+
         } else if (messageLower.startsWith("jc op")) {
             String teamName = messageLower.substring(6).trim();
-            //System.out.println(teamName);
             String teamOpgg = battlefyScraper.getPlayersOpgg(teamName);
             EmbedBuilder embed = new EmbedBuilder().setDescription(teamOpgg);
+            event.getChannel().sendMessage(embed);
+        } else if (messageLower.startsWith("jc stats")) {
+            Object[] kdaArray = battlefyScraper.getKdas().toArray();
+            StringBuilder description = new StringBuilder();
+            EmbedBuilder embed = new EmbedBuilder().setTitle("Top KDAs").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
+            for (int i = 0; i < kdaArray.length; i++) {
+                description.append("#").append(i + 1).append(" - ").append(kdaArray[kdaArray.length - 1 - i]).append("\n");
+            }
+            embed.setDescription(description.toString());
             event.getChannel().sendMessage(embed);
         }
     }

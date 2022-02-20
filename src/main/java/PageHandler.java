@@ -15,10 +15,11 @@ public class PageHandler {
     private String website;
     private String icon;
     private String title;
+    private String thumbnail;
 
     private final int ELEMENT_PAGE = 10;
 
-    public PageHandler(TextChannel channel, ArrayList<String> content, String title, String user, String website, String icon) {
+    public PageHandler(TextChannel channel, ArrayList<String> content, String title, String user, String website, String icon, String thumbnail) {
 
         this.user = user;
         this.website = website;
@@ -28,6 +29,7 @@ public class PageHandler {
         this.content = content;
 
         index = 0;
+        this.thumbnail = thumbnail;
         channelMessaging = channel;
         try {
             EmbedBuilder embed = new EmbedBuilder()
@@ -40,6 +42,9 @@ public class PageHandler {
                 contentString += i + ": " + content.get(i) + "\n";
             }
             embed.setDescription(contentString);
+            if (thumbnail != null) {
+                embed.setThumbnail(thumbnail);
+            }
             message = channelMessaging.sendMessage(embed).get();
             update();
         } catch (Exception e) {
@@ -79,6 +84,9 @@ public class PageHandler {
         }
         embed.setDescription(contentString);
         embed.setFooter("Page: " + (index + 1) + " / " + (((content.size() - 1) / ELEMENT_PAGE) + 1));
+        if (thumbnail != null) {
+            embed.setThumbnail(thumbnail);
+        }
         message.edit(embed);
     }
 }

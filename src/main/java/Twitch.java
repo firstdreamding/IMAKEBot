@@ -111,6 +111,6 @@ public class Twitch {
         }
 
         instances.remove(channel.getIdAsString());
-        instances.put(channel.getIdAsString(), new PageHandler(channel, activeStreamerList, title + " 🔴", topStreamer.toString(), topStreamerUrl.toString(), icon));
+        instances.put(channel.getIdAsString(), new PageHandler(channel, activeStreamerList, title + " 🔴", topStreamer.toString(), topStreamerUrl.toString(), icon, icon));
     }
 }
