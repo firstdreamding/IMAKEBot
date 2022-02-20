@@ -30,3 +30,5 @@ hs_err_pid*
 .idea/gradle.xml
 
 .idea
+src/main/resources/twitch_client_secret.txt
+out/production/resources/twitch_client_secret.txt
