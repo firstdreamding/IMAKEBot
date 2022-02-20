@@ -22,12 +22,14 @@ public class Main {
     private Twitch twitch;
 
     static BattlefyScraper battlefyScraper;
+    static BattlefyScraper battlefyScrapperStats;
 
     private HashMap<String, PageHandler> instances_teams;
 
     public static void main(String[] args) throws IOException, ParseException {
         // Insert your bot's token here
         battlefyScraper = new BattlefyScraper("https://battlefy.com/college-league-of-legends/2022-north-conference/6171f253947ed60d0abb9083/info?infoTab=details");
+        battlefyScrapperStats = new BattlefyScraper();
 
         String token = new String(Files.readAllBytes( Paths.get("src/main/resources/token_key.txt")));
         Main main = new Main();
@@ -37,7 +39,7 @@ public class Main {
 
         main.collegeNames = new CollegeNames();
 
-        main.twitch = new Twitch(main.collegeNames);
+        //main.twitch = new Twitch(main.collegeNames);
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
         main.api.addMessageCreateListener(event -> {
@@ -201,7 +203,16 @@ public class Main {
             String teamOpgg = battlefyScraper.getPlayersOpgg(teamName);
             EmbedBuilder embed = new EmbedBuilder().setDescription(teamOpgg);
             event.getChannel().sendMessage(embed);
+        } else if (messageLower.startsWith("jc stats")) {
+        Object[] kdaArray = battlefyScrapperStats.getKdas().toArray();
+        StringBuilder description = new StringBuilder();
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Top KDAs").setThumbnail("https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
+        for (int i = 0; i < 50; i++) {
+            description.append("#").append(i + 1).append(" - ").append(kdaArray[kdaArray.length - 1 - i]).append("\n");
         }
+        embed.setDescription(description.toString());
+        event.getChannel().sendMessage(embed);
+    }
     }
 
 }
