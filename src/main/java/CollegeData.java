@@ -1,4 +1,9 @@
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.simpleyaml.configuration.file.YamlFile;
+
+import java.util.ArrayList;
+import java.awt.*;
 
 public class CollegeData {
     private String name;
@@ -10,6 +15,7 @@ public class CollegeData {
     private String twitter;
     private String discord;
     private long TextChannelID;
+    private ArrayList<String> streamers;
 
     public CollegeData() {
 
@@ -25,7 +31,20 @@ public class CollegeData {
         discord = yamlFile.getString("Discord");
         icon = yamlFile.getString("Icon");
         TextChannelID = yamlFile.getLong("TextChannelID");
+        streamers = (ArrayList<String>) yamlFile.getStringList("Streamers");
         System.out.println(name);
+    }
+
+    public void sendSummaryMessage(TextChannel channel) {
+        EmbedBuilder embed = new EmbedBuilder()
+                .setAuthor(name, website, icon)
+                .setTitle(university)
+                .setDescription(description)
+                .setThumbnail(icon)
+                .addField("Twitter", twitter)
+                .addField("Discord", discord)
+                .setColor(Color.BLUE);
+        channel.sendMessage(embed);
     }
 
     public String getName() {
@@ -99,4 +118,6 @@ public class CollegeData {
     public void setTextChannelID(long textChannelID) {
         TextChannelID = textChannelID;
     }
+
+    public ArrayList<String> getStreamers() { return streamers; }
 }

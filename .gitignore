@@ -1,4 +1,7 @@
 token_key.txt
+twitch_client_id.txt
+twitch_client_server.txt
+twitter_token_key.txt
 
 # Compiled class file
 *.class
