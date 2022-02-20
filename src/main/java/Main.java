@@ -259,6 +259,10 @@ public class Main {
             battlefyScraper = new BattlefyScraper(tournamentURL.get(regional_.get(event.getChannel().toString())));
             ArrayList<String> kdaArray = battlefyScraper.getKdas();
             new PageHandler(event.getChannel(), kdaArray, "Top KDAs", null, null, null, "https://cdn.battlefy.com/helix/images/leagues-v2/collegelol/clol-logo.png");
+        } else if (messageLower.startsWith("jc who asked")) {
+            EmbedBuilder embed = new EmbedBuilder().setImage("https://c.tenor.com/jjQqnM67muMAAAAC/who-asked-did-i-ask.gif");
+            event.getChannel().sendMessage(embed);
+
         }
     }
 }
