@@ -262,7 +262,9 @@ public class Main {
         } else if (messageLower.startsWith("jc who asked")) {
             EmbedBuilder embed = new EmbedBuilder().setImage("https://c.tenor.com/jjQqnM67muMAAAAC/who-asked-did-i-ask.gif");
             event.getChannel().sendMessage(embed);
-
+        } else if (messageLower.startsWith("jc mike")) {
+            EmbedBuilder embed = new EmbedBuilder().setImage("https://c.tenor.com/_ha2H2_hlhEAAAAC/wazowski-mike.gif");
+            event.getChannel().sendMessage(embed);
         }
     }
 }
